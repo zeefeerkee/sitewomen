@@ -1,5 +1,5 @@
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 # Create your views here.
 def index(request: HttpRequest) -> HttpResponse:
@@ -20,7 +20,7 @@ def categories_by_slug(request: HttpRequest, cat_slug: str) -> HttpResponse:
 
 def archive(request: HttpRequest, year: int):
     if year > 2024:
-        raise Http404()
+        return redirect('cats_by_slug', 'music')
     return HttpResponse(
         f'<h1>Архивные статьи</h1><p>Архив {year} года'
         )

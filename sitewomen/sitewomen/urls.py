@@ -21,7 +21,7 @@ from women.views import page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('women/', include('women.urls')), # https://127.0.0.1:8000/women/
+    path('', include('women.urls')), # https://127.0.0.1:8000/
 ]
 
 
