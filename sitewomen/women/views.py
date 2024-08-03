@@ -1,13 +1,22 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
+menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
 
 # Create your views here.
 def index(request: HttpRequest) -> HttpResponse:
-    return render(request, 'women/index.html')
+    data = {
+        'title': 'О сайте',
+        'menu': menu,
+        }
+    return render(request, 'women/index.html', data)
 
 def about(request: HttpRequest):
-    return render(request, 'women/about.html')
+    data = {
+        'title': 'О сайте',
+        'menu': menu,
+        }
+    return render(request, 'women/about.html', context=data)
 
 
 def categories_by_id(request: HttpRequest, cat_id: int) -> HttpResponse:
