@@ -1,9 +1,13 @@
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+
 
 # Create your views here.
 def index(request: HttpRequest) -> HttpResponse:
-    return HttpResponse('<h1>Страница приложения women</h1>')
+    return render(request, 'women/index.html')
+
+def about(request: HttpRequest):
+    return render(request, 'women/about.html')
 
 
 def categories_by_id(request: HttpRequest, cat_id: int) -> HttpResponse:
