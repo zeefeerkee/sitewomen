@@ -8,7 +8,8 @@ register_converter(converters.FourDigitYearConverter, "4year")
 urlpatterns = [
     path('', views.index, name='home'),
     path('about/', views.about, name='about'),
-    path('cats/<int:cat_id>/', views.categories_by_id, name='cats_by_id'),
-    path('cats/<slug:cat_slug>/', views.categories_by_slug, name='cats_by_slug'),
-    path('archive/<4year:year>/', views.archive, name='archive'),
+    path('addpage/', views.addpage, name="addpage"),
+    path('contact/', views.contact, name="contact"),
+    path('login/', views.login, name="login"),
+    path('article/<int:article_id>/', views.show_article, name="article"),
 ]

@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                {% for el in menu %}
-                    <li style="display: inline;">
-                        <a href="">{{ el }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </nav>
-    </header>
-    
-    <section>
-        <h1>{{title}}</h1>
-        <p>Страница о <strong>женщинах</strong></p>
-    </section>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <h1>{{title}}</h1>
+    <p>Страница о <strong>женщинах</strong></p>
+    <ul>
+        {% for article in data_db %}
+            {% if article.is_published %}
+                <li>
+                    <h2>{{ article.title }}</h2>
+                    <p>{{ article.content }}</p>
+                    <a href="{% url 'article' article.id %}">Читать статью</a>
+                    {% if not forloop.last %}
+                            <hr>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>      
+</section>
+
+{% include 'women/includes/nav_footer.html' %}
+
+{% endblock %}

@@ -1,43 +1,46 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
-menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
+menu = [
+        {'title': 'о сайте', 'url_name': 'about'},
+        {'title': 'добавить статью', 'url_name': 'addpage'},
+        {'title': 'обратная связь', 'url_name': 'contact'},
+        {'title': 'авторизация', 'url_name': 'login'},
+    ]
+
+data_db = [
+    {'id': 1, 'title': 'Анджелина Джоли', 'content': 'Биография Анджелины Джоли', 'is_published': True},
+    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
+    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
+]
 
 # Create your views here.
-def index(request: HttpRequest) -> HttpResponse:
+def index(request):
     data = {
-        'title': 'О сайте',
+        'title': 'Главная страница',
         'menu': menu,
+        'data_db': data_db,
         }
     return render(request, 'women/index.html', data)
 
-def about(request: HttpRequest):
+def about(request):
     data = {
         'title': 'О сайте',
         'menu': menu,
         }
     return render(request, 'women/about.html', context=data)
 
+def show_article(request, article_id: int):
+    return HttpResponse(f"Отображение статьи с id = {article_id}")
 
-def categories_by_id(request: HttpRequest, cat_id: int) -> HttpResponse:
-    return HttpResponse(
-        f'<h1>Статьи по категориям</h1><p>cat_id: {cat_id}</p>'
-        )
+def addpage(request):
+    return HttpResponse('<h1>Добавление статьи</h1>')
 
+def contact(request):
+    return HttpResponse('<h1>Обратная связь</h1>')
 
-def categories_by_slug(request: HttpRequest, cat_slug: str) -> HttpResponse:
-    return HttpResponse(
-        f'<h1>Статьи по категориям</h1><p>cat_slug: {cat_slug}</p>'
-        )
+def login(request):
+    return HttpResponse('<h1>Авторизация</h1>')
 
-
-def archive(request: HttpRequest, year: int):
-    if year > 2024:
-        return redirect('cats_by_slug', 'music')
-    return HttpResponse(
-        f'<h1>Архивные статьи</h1><p>Архив {year} года'
-        )
-
-
-def page_not_found(request: HttpRequest, exception: Exception) -> HttpResponse:
+def page_not_found(request, exception: Exception):
     return HttpResponse('<h1>Page not found</h1>')
