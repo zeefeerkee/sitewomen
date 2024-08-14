@@ -1,24 +1,17 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<section>
-    <h1>{{title}}</h1>
-    <p>Страница о <strong>женщинах</strong></p>
-    <ul>
-        {% for article in data_db %}
-            {% if article.is_published %}
-                <li>
-                    <h2>{{ article.title }}</h2>
-                    <p>{{ article.content }}</p>
-                    <a href="{% url 'article' article.id %}">Читать статью</a>
-                    {% if not forloop.last %}
-                            <hr>
-                    {% endif %}
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>      
-</section>
-
-{% include 'women/includes/nav_footer.html' %}
-
+<ul class="list-articles">
+	{% for article in articles_db %}
+	{% if article.is_published %}
+			<li><h2>{{article.title}}</h2>
+    {% autoescape off %}
+	{{article.content|linebreaks|truncatewords:40}}
+    {% endautoescape %}
+			<div class="clear"></div>
+			<p class="link-read-post"><a href="{% url 'article' article.id %}">Читать пост</a></p>
+			</li>
+	{% endif %}
+	{% endfor %}
+</ul>
 {% endblock %}

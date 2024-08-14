@@ -12,4 +12,5 @@ urlpatterns = [
     path('contact/', views.contact, name="contact"),
     path('login/', views.login, name="login"),
     path('article/<int:article_id>/', views.show_article, name="article"),
+    path('category/<int:cat_id>/', views.show_category, name="cat_by_id"),
 ]
