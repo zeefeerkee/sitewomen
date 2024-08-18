@@ -1,5 +1,7 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+
+from .models import Category, TagArticle, Women
 
 menu = [
         {'title': 'о сайте', 'url_name': 'about'},
@@ -8,28 +10,13 @@ menu = [
         {'title': 'авторизация', 'url_name': 'login'},
     ]
 
-articles_db = [
-    {'id': 1, 'title': 'Анджелина Джоли', 'content': '''<h1>Анджелина Джоли</h1> (англ. Angelina Jolie[7], при рождении Войт (англ. Voight), ранее Джоли Питт (англ. Jolie Pitt); род. 4 июня 1975, Лос-Анджелес, Калифорния, США) — американская актриса кино, телевидения и озвучивания, кинорежиссёр, сценаристка, продюсер, фотомодель, посол доброй воли ООН.
-
-    Обладательница премии «Оскар», трёх премий «Золотой глобус» (первая актриса в истории, три года подряд выигравшая премию) и двух «Премий Гильдии киноактёров США».''',
-
-     'is_published': True},
-    {'id': 2, 'title': 'Марго Робби', 'content': 'Биография Марго Робби', 'is_published': False},
-    {'id': 3, 'title': 'Джулия Робертс', 'content': 'Биография Джулия Робертс', 'is_published': True},
-]
-
-cats_db = [
-    {'id': 1, 'name': 'Актрисы'},
-    {'id': 2, 'name': 'Певицы'},
-    {'id': 3, 'name': 'Спортсменки'},
-]
-
 # Create your views here.
 def index(request):
+    articles = Women.published.all()
     data = {
         'title': 'Главная страница',
         'menu': menu,
-        'articles_db': articles_db,
+        'articles': articles,
         'cat_selected': 0,
         }
     return render(request, 'women/index.html', data)
@@ -41,8 +28,18 @@ def about(request):
         }
     return render(request, 'women/about.html', context=data)
 
-def show_article(request, article_id: int):
-    return HttpResponse(f"Отображение статьи с id = {article_id}")
+
+def show_article(request, article_slug: str):
+    article = get_object_or_404(Women, slug=article_slug)
+
+    data = {
+        'title': article.title,
+        'menu': menu,
+        'article': article,
+        'cat_selected': 1,
+    }
+    return render(request, 'women/article.html', context=data)
+
 
 def addpage(request):
     return HttpResponse('<h1>Добавление статьи</h1>')
@@ -53,14 +50,30 @@ def contact(request):
 def login(request):
     return HttpResponse('<h1>Авторизация</h1>')
 
-def show_category(request, cat_id):
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    articles = Women.published.filter(cat_id=category.pk)
     data = {
-        'title': 'Отображение по рубрикам',
+        'title': f"Рубрика {category.name}",
         'menu': menu,
-        'articles_db': articles_db,
-        'cat_selected': cat_id,
+        'articles': articles,
+        'cat_selected': category.pk,
         }
     return render(request, 'women/index.html', data)
+
+def show_tag_articlelist(request, tag_slug):
+    tag = get_object_or_404(TagArticle, slug=tag_slug)
+    articles = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+
+    data = {
+        'title': f'Тег: {tag.tag}',
+        'menu': menu,
+        'articles': articles,
+        'cat_selected': None,
+
+    }
+
+    return render(request, 'women/index.html', context=data)
 
 def page_not_found(request, exception: Exception):
     return HttpResponse('<h1>Page not found</h1>')
