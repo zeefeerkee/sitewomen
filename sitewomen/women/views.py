@@ -44,7 +44,8 @@ def show_article(request, article_slug: str):
 
 
 def addpage(request):
-    return HttpResponse("<h1>Добавление статьи</h1>")
+    context = {"menu": menu, "title": "Добавление статьи"}
+    return render(request, "women/addpage.html", context=context)
 
 
 def contact(request):
